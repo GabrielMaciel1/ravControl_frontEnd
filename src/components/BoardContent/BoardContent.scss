@@ -1,0 +1,78 @@
+@import "../../settings";
+
+.board-columns {
+  display: flex;
+  margin: 0 $gap 5px 0;
+  gap: 10px;
+  overflow-x: auto;
+  overflow-y: hidden;
+
+  &::-webkit-scrollbar {
+    -webkit-appearance: none;
+  }
+  &::-webkit-scrollbar:horizontal {
+    width: 11px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: rgba(255, 255, 255, 0.24);
+    border-radius: 5px solid $list-bg-color;
+    background-clip: padding-box;
+  }
+
+  .column-ghost {
+    transition: transform 0.18s ease;
+    transform: rotateZ(5deg);
+  }
+
+  .column-ghost-drop {
+    transition: transform 0.18s ease-in-out;
+    transform: rotateZ(0deg);
+  }
+
+  .column-drop-preview {
+    background-color: rgba(150, 150, 200, 0.1);
+    border: 1px dashed #abc;
+    margin: 5px 45px 5px 5px;
+  }
+
+  .add-new-column {
+    width: 250px;
+    //height: 32px;
+    line-height: 32px;
+    padding: 4px 0 4px 15px;
+    cursor: pointer;
+    color: #3c3c3c;
+    margin-left: $gap;
+    font-size: 15px;
+    background-color: hsla(0, 0, 100, 0.24);
+    border-radius: $card-border-radius;
+
+    &:hover {
+      background-color: hsla(0, 0, 100, 0.34);
+    }
+  }
+  .content-add-column {
+    width: 250px;
+    height: fit-content;
+    padding: 5px;
+    margin-left: 10px;
+    background-color: hsla(0, 0, 100, 0.34);
+    border-radius: $card-border-radius;
+
+    .group-btn {
+      display: flex;
+      padding-top: 10px;
+      align-items: center;
+
+      i {
+        font-size: 30px;
+        padding-left: 10px;
+        cursor: pointer;
+      }
+    }
+
+    .form-control {
+      width: unset !important;
+    }
+  }
+}

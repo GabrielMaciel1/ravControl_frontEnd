@@ -1,0 +1,60 @@
+@import "../../settings";
+
+div.card-item {
+  background-color: white;
+  padding: $gap;
+  border-radius: $card-border-radius;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.9);
+  cursor: pointer;
+  margin-bottom: $gap;
+  float: none;
+  display: flex;
+  padding-right: 3px;
+
+  .card-title {
+    width: 90%;
+    padding-top: 5px;
+    text-transform:uppercase
+    
+  }
+  .card-dropdown {
+    width: 10%;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+
+    .dropdown-toggle {
+      padding: 2px 7px;
+      font-size: 200;
+      position: relative;
+
+      &::after {
+        content: "...";
+        border: none !important;
+        outline: none !important;
+        box-shadow: none !important;
+      }
+
+      &:hover {
+        background-color: #091e4214;
+        display: inline-block;
+      }
+      &:focus {
+        outline: none !important ;
+        box-shadow: none !important;
+      }
+    }
+  }
+  .customize-input-card {
+    border: none;
+    cursor: pointer;
+    &:focus {
+      outline: none !important ;
+      box-shadow: none !important;
+    }
+    &:focus-visible {
+      background-color: $list-bg-color;
+      color: black;
+    }
+  }
+}

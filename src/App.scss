@@ -1,0 +1,35 @@
+@import "./settings.scss";
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-size: 14px;
+  line-height: 1.3rem;
+}
+
+.app-master {
+  height: 100vh;
+  display: grid;
+  grid-template-rows: 40px 40px 1fr;
+  background-color: $board-bg-color;
+  color: $app-main-color;
+
+  .icon {
+    font-size: 14px;
+    margin-right: 3px;
+  }
+
+  .customize-input-column {
+    border: none;
+    cursor: pointer;
+    &:focus {
+      outline: none !important ;
+      box-shadow: none !important;
+    }
+    background-color: inherit;
+  }
+}
