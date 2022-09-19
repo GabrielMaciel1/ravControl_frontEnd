@@ -1,7 +1,8 @@
 import React, { useEffect, useState, useRef } from "react";
-import { createCard, getCards, getColumns } from "../../components/services/api";
+import { createCard, getCard, getCards } from "../../components/services/api";
 import "./Column.scss";
 import { initData } from "../../actions/initData";
+import _, { isFunction } from "lodash";
 import Card from "../Card/Card";
 import { mapOrder } from "../../utilities/Sorts";
 import { Container, Draggable } from "react-smooth-dnd";
@@ -24,7 +25,10 @@ function Column(props) {
     deleteColumn,
     updateColumn,
   } = props;
-  let cards = mapOrder(column.cards, column.cardOrder, "id");
+  //let card = mapOrder(column.cards, column.cardOrder, "id");
+
+  //const [board, setBoard] = useState({});
+  const [cards, setCards] = useState({});
   
   const [isShowModalDelete, setShowModalDelete] = useState(false);
   const [titleColumn, setTitleColumn] = useState("");
@@ -36,8 +40,26 @@ function Column(props) {
   const [valueTextArea, setValueTextArea] = useState("");
   const textAreaRef = useRef(null);
 
-  
 
+
+  async function getAllNotes() {
+    
+    const responseCard = await getCards()
+    
+    // console.log(response);
+    const boardInitData = initData.boards.find((item) => item.id === "board-1");
+    boardInitData.cards = responseCard.data;
+    
+   
+    
+    
+    setCards(
+       mapOrder(boardInitData.cards, boardInitData.cardsOrder, "id")
+     );
+  }
+  useEffect(() => {
+    getAllNotes();
+  }, [getAllNotes]);
 
   useEffect(() => {
     if (isShowAddNewCard === true && textAreaRef && textAreaRef.current) {
@@ -50,6 +72,13 @@ function Column(props) {
       setTitleColumn(column.name);
     }
   }, [column]);
+
+  useEffect(() => {
+    if (cards && cards.name) {
+      setValueTextArea(cards.name);
+    }
+  }, [cards]);
+  
 
   const ToggleModal = () => {
     setShowModalDelete(!isShowModalDelete);
@@ -93,30 +122,44 @@ function Column(props) {
 
   const handleAddNewCard = () => {
 
-    const response = getCards()
+    
 
     if (!valueTextArea) {
+      
+      if (textAreaRef && textAreaRef.current)
       textAreaRef.current.focus();
       return;
     }
-    const newCard = {
-      id:response.id ,
-      boardId: column.boardId,
+    const card = {
+      
       columnsId: column.id,
       name: valueTextArea,
-    };
 
-    createCard(newCard);
+      
+    };
+    
+    console.log(card)
+
+    // const _newCards = _.cloneDeep(cards);
+    //  _newCards.push(newCard);
+     createCard(card);
+     setCards(card)
+    setValueTextArea("");
+    
+    
+    //  onUpdateColumn(newColumn);
+    setIsShowAddNewCard(false);
+
+    
     
    
-    let newColumn = { ...column };
-    newColumn.cards = [...newColumn.cards, newCard];
-    newColumn.cardsOrder = newColumn.cards.map((card) => card.id);
+    //let newColumn = { ...column };
+    // newColumn.cards = [...newColumn.cards, newCard];
+    // newColumn.cardsOrder = newColumn.cards.map((card) => card.id);
 
-     onUpdateColumn(newColumn);
-    setValueTextArea("");
-    setIsShowAddNewCard(false);
+    
   };
+  
 
   return (
     <>

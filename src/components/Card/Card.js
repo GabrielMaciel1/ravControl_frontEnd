@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
+import { getCards } from "../../components/services/api";
 import { mapOrder } from "../../utilities/Sorts";
+import { initData } from "../../actions/initData";
 import { Container, Draggable } from "react-smooth-dnd";
 import Dropdown from "react-bootstrap/Dropdown";
 import ConfirmModel from "../common/ConfirmModel";
@@ -13,13 +15,15 @@ import "./Card.scss";
 import DropdownItem from "react-bootstrap/esm/DropdownItem";
 
 function Card(props) {
-  const { cards, deleteCard, updateCard } = props;
+  const { deleteCard, updateCard, card} = props;
   const inputRef = useRef(null);
   const [isFirstClick, setIsFirstClick] = useState(true);
 
   const [isShowModalDelete, setShowModalDelete] = useState(false);
-  const [card, setCard] = useState([]);
+   const [cards, setCards] = useState({});
   const [titleCard, setTitleCard] = useState("");
+
+  
 
   const ToggleModal = () => {
     setShowModalDelete(!isShowModalDelete);
@@ -33,14 +37,14 @@ function Card(props) {
     if (type === MODAL_ACTION_CONFIRM) {
       //remove uma coluna/grupo
 
-      deleteCard(cards.id);
+      deleteCard(card.id);
     }
     ToggleModal();
   };
 
   const onUpdateCard = (newCard) => {
     const cardIdUpdate = newCard.id;
-    let ncols = [...card];
+    let ncols = [...cards];
     let index = ncols.findIndex((item) => item.id === cardIdUpdate);
     if (newCard._destroy) {
       ncols.splice(index, 1);
@@ -49,7 +53,7 @@ function Card(props) {
     }
     updateCard(newCard);
 
-    setCard(ncols);
+    setCards(ncols);
   };
 
   const selectAllText = (event) => {
@@ -68,11 +72,12 @@ function Card(props) {
     }
   }, [card]);
 
+  
   const handleClickOutside = () => {
     //faça alguma coisa
     setIsFirstClick(true);
     const newCard = {
-      ...card,
+      ...cards,
       name: titleCard,
       _destroy: false,
     };

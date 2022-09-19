@@ -11,6 +11,10 @@ export function getColumns() {
 export function getCards(){
   return api.get("/card")
 }
+export function getCard(id){
+  return api.get (`/card/${id}`)
+}
+
 export function createCard(card) {
   return api.post("/card", card);
 }
