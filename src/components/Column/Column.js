@@ -15,6 +15,7 @@ import {
 } from "../../utilities/constant";
 import { v4 as uuidv4 } from "uuid";
 
+
 function Column(props) {
   const {
     column,
@@ -24,10 +25,11 @@ function Column(props) {
     updateCard,
     deleteColumn,
     updateColumn,
+    
   } = props;
   //let card = mapOrder(column.cards, column.cardOrder, "id");
 
-  //const [board, setBoard] = useState({});
+  
   const [cards, setCards] = useState({});
   
   const [isShowModalDelete, setShowModalDelete] = useState(false);
@@ -48,18 +50,16 @@ function Column(props) {
     
     // console.log(response);
     const boardInitData = initData.boards.find((item) => item.id === "board-1");
-    boardInitData.cards = responseCard.data;
+    boardInitData.columns.cards = responseCard.data
     
    
-    
-    
-    setCards(
-       mapOrder(boardInitData.cards, boardInitData.cardsOrder, "id")
-     );
+    setCards(boardInitData.columns.cards);
   }
+    
+    
   useEffect(() => {
     getAllNotes();
-  }, [getAllNotes]);
+  }, [cards]);
 
   useEffect(() => {
     if (isShowAddNewCard === true && textAreaRef && textAreaRef.current) {
@@ -131,7 +131,7 @@ function Column(props) {
       return;
     }
     const card = {
-      
+      id: cards.id,
       columnsId: column.id,
       name: valueTextArea,
 
@@ -142,13 +142,13 @@ function Column(props) {
 
     // const _newCards = _.cloneDeep(cards);
     //  _newCards.push(newCard);
-     createCard(card);
-     setCards(card)
+    createCard(card);
+    setCards(card)
     setValueTextArea("");
     
-    
-    //  onUpdateColumn(newColumn);
     setIsShowAddNewCard(false);
+    //  onUpdateColumn(newColumn);
+    
 
     
     
@@ -157,7 +157,7 @@ function Column(props) {
     // newColumn.cards = [...newColumn.cards, newCard];
     // newColumn.cardsOrder = newColumn.cards.map((card) => card.id);
 
-    
+    getAllNotes()
   };
   
 
@@ -202,7 +202,7 @@ function Column(props) {
             }}
             dropPlaceholderAnimationDuration={200}
           >
-            {cards &&
+              {cards &&
               cards.length > 0 &&
               cards.map((card, index) => {
                 return (

@@ -1,9 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
-import { getCards } from "../../components/services/api";
-import { mapOrder } from "../../utilities/Sorts";
 import { initData } from "../../actions/initData";
-import { Container, Draggable } from "react-smooth-dnd";
-import Dropdown from "react-bootstrap/Dropdown";
+import { getCards } from "../../components/services/api";
 import ConfirmModel from "../common/ConfirmModel";
 import Form from "react-bootstrap/Form";
 import {
@@ -23,6 +20,8 @@ function Card(props) {
    const [cards, setCards] = useState({});
   const [titleCard, setTitleCard] = useState("");
 
+
+
   
 
   const ToggleModal = () => {
@@ -38,8 +37,11 @@ function Card(props) {
       //remove uma coluna/grupo
 
       deleteCard(card.id);
+      
     }
+    
     ToggleModal();
+    
   };
 
   const onUpdateCard = (newCard) => {

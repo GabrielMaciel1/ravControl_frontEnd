@@ -33,6 +33,7 @@ function BoardContent() {
 
   async function getAllNotes() {
     const response = await getColumns();
+    const responseCard = await getCards()
     
     
     // console.log(response);
@@ -43,12 +44,12 @@ function BoardContent() {
     
     setBoard(boardInitData);
     setColumns(
-       mapOrder(boardInitData.columns, boardInitData.columnOrder, "id")
-     );
+       boardInitData.columns, boardInitData.columnOrder, "id"
+     )
   }
   useEffect(() => {
     getAllNotes();
-  }, [getAllNotes]);
+  }, [columns]);
 
   async function deleteCard(cardId) {
     await deleteCardApi(cardId);
@@ -130,17 +131,17 @@ function BoardContent() {
 
     const column = {
 
-      id: response.id,
+      id: columns.id,
       boardId: board.id,
       name: valueInput,
       cards: [{}],
     };
-    //  const _columns = _.cloneDeep(columns);
-    //  _columns.push(column);
+    console.log(column)
     createColumn(column);
     setColumns(column);
     setValueInput("");
-    //inputRef.current.focus();
+    getAllNotes()
+    inputRef.current.focus();
   };
 
   const onUpdateColumn = (newColumn) => {
