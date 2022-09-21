@@ -15,10 +15,10 @@ export function getCard(id){
   return api.get (`/card/${id}`)
 }
 
-export function createCard(card) {
+export function createCards(card) {
   return api.post("/card", card);
 }
-export function createColumn(column) {
+export function createColumns(column) {
   return api.post("/columns", column);
 }
 

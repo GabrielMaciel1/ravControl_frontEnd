@@ -1,12 +1,10 @@
-import React, { useEffect, useState, useRef } from "react";
-import { createCard, getCard, getCards } from "../../components/services/api";
+import React, { useEffect, useState, useRef, use } from "react";
+import { createCards,deleteCardApi , getCards, updateCardApi, deleteCard } from "../../components/services/api";
 import "./Column.scss";
 import { initData } from "../../actions/initData";
 import _, { isFunction } from "lodash";
 import Card from "../Card/Card";
-import { mapOrder } from "../../utilities/Sorts";
 import { Container, Draggable } from "react-smooth-dnd";
-import Dropdown from "react-bootstrap/Dropdown";
 import ConfirmModel from "../common/ConfirmModel";
 import Form from "react-bootstrap/Form";
 import {
@@ -16,18 +14,21 @@ import {
 import { v4 as uuidv4 } from "uuid";
 
 
+
 function Column(props) {
   const {
+    id,
     column,
+    getAllNotes,
     onCardDrop,
     onUpdateColumn,
-    deleteCard,
+    // deleteCard,
     updateCard,
     deleteColumn,
     updateColumn,
     
   } = props;
-  //let card = mapOrder(column.cards, column.cardOrder, "id");
+  
 
   
   const [cards, setCards] = useState({});
@@ -44,7 +45,7 @@ function Column(props) {
 
 
 
-  async function getAllNotes() {
+  async function getAllNotesCards() {
     
     const responseCard = await getCards()
     
@@ -52,15 +53,30 @@ function Column(props) {
     const boardInitData = initData.boards.find((item) => item.id === "board-1");
     boardInitData.columns.cards = responseCard.data
     
+    
    
     setCards(boardInitData.columns.cards);
+
+    
+   
   }
     
     
   useEffect(() => {
-    getAllNotes();
-  }, [cards]);
+     getAllNotesCards()
+  }, [setCards]);
 
+  async function deleteCard(cardId) {
+    await deleteCardApi(cardId);
+     getAllNotesCards();
+  }
+
+  async function createCard(cardId) {
+    await createCards(cardId);
+     getAllNotesCards();
+  }
+  
+  
   useEffect(() => {
     if (isShowAddNewCard === true && textAreaRef && textAreaRef.current) {
       textAreaRef.current.focus();
@@ -78,6 +94,8 @@ function Column(props) {
       setValueTextArea(cards.name);
     }
   }, [cards]);
+
+ 
   
 
   const ToggleModal = () => {
@@ -93,7 +111,9 @@ function Column(props) {
       //remove uma coluna/grupo
       deleteColumn(column.id);
     }
+    
     ToggleModal();
+    getAllNotesCards()
   };
 
   const selectAllText = (event) => {
@@ -118,6 +138,7 @@ function Column(props) {
     };
 
     updateColumn(newColumn);
+    getAllNotes()
   };
 
   const handleAddNewCard = () => {
@@ -140,8 +161,8 @@ function Column(props) {
     
     console.log(card)
 
-    // const _newCards = _.cloneDeep(cards);
-    //  _newCards.push(newCard);
+    // const _newCards = _.cloneDeep(card);
+    //  _newCards.push(card);
     createCard(card);
     setCards(card)
     setValueTextArea("");
@@ -157,7 +178,7 @@ function Column(props) {
     // newColumn.cards = [...newColumn.cards, newCard];
     // newColumn.cardsOrder = newColumn.cards.map((card) => card.id);
 
-    getAllNotes()
+    getAllNotesCards()
   };
   
 
@@ -206,6 +227,7 @@ function Column(props) {
               cards.length > 0 &&
               cards.map((card, index) => {
                 return (
+                  card.columns.id === id &&
                   <Draggable key={card.id}>
                     <Card
                       card={card}

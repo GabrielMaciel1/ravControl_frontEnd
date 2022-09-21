@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { initData } from "../../actions/initData";
-import { getCards } from "../../components/services/api";
+import { updateCardApi } from "../../components/services/api";
 import ConfirmModel from "../common/ConfirmModel";
 import Form from "react-bootstrap/Form";
 import {
@@ -12,7 +12,7 @@ import "./Card.scss";
 import DropdownItem from "react-bootstrap/esm/DropdownItem";
 
 function Card(props) {
-  const { deleteCard, updateCard, card} = props;
+  const { deleteCard,  card, getAllNotesCards} = props;
   const inputRef = useRef(null);
   const [isFirstClick, setIsFirstClick] = useState(true);
 
@@ -44,19 +44,24 @@ function Card(props) {
     
   };
 
-  const onUpdateCard = (newCard) => {
-    const cardIdUpdate = newCard.id;
-    let ncols = [...cards];
-    let index = ncols.findIndex((item) => item.id === cardIdUpdate);
-    if (newCard._destroy) {
-      ncols.splice(index, 1);
-    } else {
-      ncols[index] = newCard;
-    }
-    updateCard(newCard);
+ async function updateCard(name) {
+    await updateCardApi(name);
+    getAllNotesCards();
+  }
 
-    setCards(ncols);
-  };
+  // const onUpdateCard = (card) => {
+  //   const cardIdUpdate = card.id;
+  //   let ncols = [...card];
+  //   let index = ncols.findIndex((item) => item.id === cardIdUpdate);
+  //   if (card._destroy) {
+  //     ncols.splice(index, 1);
+  //   } else {
+  //     ncols[index] = card;
+  //   }
+  //   updateCard(card);
+
+  //   setCards(ncols);
+  // };
 
   const selectAllText = (event) => {
     setIsFirstClick(false);
@@ -83,7 +88,7 @@ function Card(props) {
       name: titleCard,
       _destroy: false,
     };
-    onUpdateCard(newCard);
+    updateCard(newCard);
   };
 
   return (

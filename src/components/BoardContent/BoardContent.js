@@ -8,7 +8,7 @@ import { Container, Draggable } from "react-smooth-dnd";
 import { applyDrag } from "../../utilities/dragDrop";
 import { v4 as uuidv4 } from "uuid";
 import {
-  createColumn,
+  createColumns,
   deleteCardApi,
   deleteColumnApi,
   getColumns,
@@ -17,7 +17,10 @@ import {
   updateColumnApi,
 } from "../services/api";
 
-function BoardContent() {
+function BoardContent(props) {
+
+  const {deleteCard, updateCard} = props
+
   const [board, setBoard] = useState({});
   const [columns, setColumns] = useState({});
 
@@ -32,13 +35,14 @@ function BoardContent() {
   }, [isShowAddList]);
 
   async function getAllNotes() {
-    const response = await getColumns();
-    const responseCard = await getCards()
+    const responseColumns = await getColumns();
+    
+    
     
     
     // console.log(response);
     const boardInitData = initData.boards.find((item) => item.id === "board-1");
-    boardInitData.columns = response.data;
+    boardInitData.columns = responseColumns.data;
     
    
     
@@ -46,32 +50,40 @@ function BoardContent() {
     setColumns(
        boardInitData.columns, boardInitData.columnOrder, "id"
      )
+    
+     
+     
+     
   }
   useEffect(() => {
     getAllNotes();
-  }, [columns]);
+  }, []);
 
-  async function deleteCard(cardId) {
-    await deleteCardApi(cardId);
-    getAllNotes();
-  }
-  async function updateCard(card) {
-    await updateCardApi(card);
-    getAllNotes();
-  }
+  // async function deleteCard(cardId) {
+  //   await deleteCardApi(cardId);
+  //    getAllNotes();
+  // }
+  // async function updateCard(card) {
+  //   await updateCardApi(card);
+  //   getAllNotes();
+  // }
 
   async function updateColumn(column) {
     await updateColumnApi(column);
     getAllNotes();
   }
+  async function createColumn(column) {
+    await createColumns(column);
+    getAllNotes();
+  }
 
   async function deleteColumn(columnId) {
-    const column = columns.find((column) => column.id === columnId);
-    if (column.length > 0) {
-      column.cards.forEach((card) => {
-        deleteCardApi(card.id);
-      });
-    }
+    // const column = columns.find((column) => column.id === columnId);
+    // if (column.length > 0) {
+    //   column.cards.forEach((card) => {
+    //     deleteCardApi(card.id);
+    //   });
+    // }
 
     await deleteColumnApi(columnId);
 
@@ -123,7 +135,7 @@ function BoardContent() {
 
   async function handleAddList(){
 
-    const response = await getColumns();
+    
 
     if (!valueInput) {
       if (inputRef && inputRef.current) inputRef.current.focus();
@@ -137,6 +149,8 @@ function BoardContent() {
       cards: [{}],
     };
     console.log(column)
+    
+    
     createColumn(column);
     setColumns(column);
     setValueInput("");
@@ -177,6 +191,7 @@ function BoardContent() {
               return (
                 <Draggable key={column.id}>
                   <Column
+                    id={column.id}
                     column={column}
                     onCardDrop={onCardDrop}
                     onUpdateColumn={onUpdateColumn}
