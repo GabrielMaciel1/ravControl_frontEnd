@@ -12,12 +12,12 @@ import "./Card.scss";
 import DropdownItem from "react-bootstrap/esm/DropdownItem";
 
 function Card(props) {
-  const { deleteCard,  card, getAllNotesCards} = props;
+  const { deleteCard,  card, updateCard} = props;
   const inputRef = useRef(null);
   const [isFirstClick, setIsFirstClick] = useState(true);
 
   const [isShowModalDelete, setShowModalDelete] = useState(false);
-   const [cards, setCards] = useState({});
+  //  const [cards, setCards] = useState({});
   const [titleCard, setTitleCard] = useState("");
 
 
@@ -44,13 +44,11 @@ function Card(props) {
     
   };
 
- async function updateCard(name) {
-    await updateCardApi(name);
-    getAllNotesCards();
-  }
+ 
 
   // const onUpdateCard = (card) => {
   //   const cardIdUpdate = card.id;
+  //   console.log(cardIdUpdate)
   //   let ncols = [...card];
   //   let index = ncols.findIndex((item) => item.id === cardIdUpdate);
   //   if (card._destroy) {
@@ -58,7 +56,7 @@ function Card(props) {
   //   } else {
   //     ncols[index] = card;
   //   }
-  //   updateCard(card);
+  //   onUpdateCard(card);
 
   //   setCards(ncols);
   // };
@@ -84,11 +82,14 @@ function Card(props) {
     //faça alguma coisa
     setIsFirstClick(true);
     const newCard = {
-      ...cards,
-      name: titleCard,
-      _destroy: false,
+      ...card,
+      name:  titleCard,
+      
     };
+    
     updateCard(newCard);
+    setTitleCard(newCard)
+    console.log(newCard);
   };
 
   return (
@@ -106,6 +107,12 @@ function Card(props) {
             onBlur={handleClickOutside}
             onMouseDown={(e) => e.preventDefault()}
             ref={inputRef}
+            onKeyPress={(event) => {
+              if (event.key === "Enter") {
+                handleClickOutside();
+                
+              }
+            }}
           />
         </div>
         <div className="card-dropdown">

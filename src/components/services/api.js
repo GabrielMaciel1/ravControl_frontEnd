@@ -22,12 +22,12 @@ export function createColumns(column) {
   return api.post("/columns", column);
 }
 
-export function updateCardApi(card) {
-  return api.put("/card", card);
+export function updateCardApi(id, card) {
+  return api.put(`/card/${id}`, card);
 }
 
-export function updateColumnApi(column) {
-  return api.put("/columns", column);
+export function updateColumnApi(id,column) {
+  return api.put(`/columns/${id}`, column);
 }
 
 export function deleteCardApi(id) {

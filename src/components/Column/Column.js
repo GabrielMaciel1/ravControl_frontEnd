@@ -21,9 +21,6 @@ function Column(props) {
     column,
     getAllNotes,
     onCardDrop,
-    onUpdateColumn,
-    // deleteCard,
-    updateCard,
     deleteColumn,
     updateColumn,
     
@@ -75,6 +72,16 @@ function Column(props) {
     await createCards(cardId);
      getAllNotesCards();
   }
+
+  async function updateCard(card) {
+
+    await updateCardApi(card.id,{
+      name: card.name
+    });
+    getAllNotesCards();
+    
+  }
+  
   
   
   useEffect(() => {
@@ -138,7 +145,8 @@ function Column(props) {
     };
 
     updateColumn(newColumn);
-    getAllNotes()
+    setTitleColumn(newColumn)
+    getAllNotesCards()
   };
 
   const handleAddNewCard = () => {

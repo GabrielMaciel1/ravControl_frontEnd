@@ -59,17 +59,12 @@ function BoardContent(props) {
     getAllNotes();
   }, []);
 
-  // async function deleteCard(cardId) {
-  //   await deleteCardApi(cardId);
-  //    getAllNotes();
-  // }
-  // async function updateCard(card) {
-  //   await updateCardApi(card);
-  //   getAllNotes();
-  // }
+
 
   async function updateColumn(column) {
-    await updateColumnApi(column);
+    await updateColumnApi(column.id,{
+      name:column.name
+    });
     getAllNotes();
   }
   async function createColumn(column) {
@@ -78,12 +73,12 @@ function BoardContent(props) {
   }
 
   async function deleteColumn(columnId) {
-    // const column = columns.find((column) => column.id === columnId);
-    // if (column.length > 0) {
-    //   column.cards.forEach((card) => {
-    //     deleteCardApi(card.id);
-    //   });
-    // }
+    const column = columns.find((columns) => columns.id === columnId);
+    if (column.length > 0) {
+      column.cards.forEach((card) => {
+        deleteCardApi(card.id);
+      });
+    }
 
     await deleteColumnApi(columnId);
 
@@ -150,12 +145,13 @@ function BoardContent(props) {
     };
     console.log(column)
     
-    
+    inputRef.current.focus();
     createColumn(column);
     setColumns(column);
     setValueInput("");
+    setIsShowAddList(false)
     getAllNotes()
-    inputRef.current.focus();
+    
   };
 
   const onUpdateColumn = (newColumn) => {
@@ -221,6 +217,7 @@ function BoardContent(props) {
                 onKeyPress={(event) => {
                   if (event.key === "Enter") {
                     handleAddList();
+                    
                   }
                 }}
                 placeholder="Insira o título do grupo..."
