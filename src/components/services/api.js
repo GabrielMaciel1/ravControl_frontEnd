@@ -26,6 +26,10 @@ export function updateCardApi(id, card) {
   return api.put(`/card/${id}`, card);
 }
 
+export function updateCardColumnId(id, card){
+  return api.put(`/card/${id}`, card);
+}
+
 export function updateColumnApi(id,column) {
   return api.put(`/columns/${id}`, column);
 }

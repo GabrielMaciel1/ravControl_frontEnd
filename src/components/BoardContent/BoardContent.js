@@ -9,17 +9,15 @@ import { applyDrag } from "../../utilities/dragDrop";
 import { v4 as uuidv4 } from "uuid";
 import {
   createColumns,
-  deleteCardApi,
   deleteColumnApi,
   getColumns,
-  getCards,
-  updateCardApi,
+  updateCardColumnId,
   updateColumnApi,
 } from "../services/api";
 
 function BoardContent(props) {
 
-  const {deleteCard, updateCard} = props
+  const {deleteCard, updateCard, cards} = props
 
   const [board, setBoard] = useState({});
   const [columns, setColumns] = useState({});
@@ -67,19 +65,18 @@ function BoardContent(props) {
     });
     getAllNotes();
   }
+  async function updateColumnIdCard(card, columnsId){
+    await updateCardColumnId(card.id,{
+      columns: columnsId
+    })
+  }
+
   async function createColumn(column) {
     await createColumns(column);
     getAllNotes();
   }
 
   async function deleteColumn(columnId) {
-    const column = columns.find((columns) => columns.id === columnId);
-    if (column.length > 0) {
-      column.cards.forEach((card) => {
-        deleteCardApi(card.id);
-      });
-    }
-
     await deleteColumnApi(columnId);
 
     getAllNotes();
@@ -111,9 +108,9 @@ function BoardContent(props) {
       let newColumns = [...columns];
       let currentColumn = newColumns.find((column) => column.id === columnId);
       currentColumn.cards = applyDrag(currentColumn.cards, dropResult);
-      currentColumn.cardOrder = currentColumn.cards.map((card) => card.id);
-      if (dropResult.payload.columnId !== columnId) {
-        updateCard({ ...dropResult.payload, columnId });
+      currentColumn.cardsOrder = currentColumn.cards.map((card) => card);
+      if (dropResult.payload.columns !== columnId) {
+        updateColumnIdCard({ ...dropResult.payload.columns, columnId });
       }
 
       setColumns(newColumns);

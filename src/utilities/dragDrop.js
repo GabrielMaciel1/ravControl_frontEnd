@@ -5,7 +5,7 @@ export const applyDrag = (arr, dragResult) => {
 
   if (removedIndex === null && addedIndex === null) return arr;
 
-  let result = [...arr];
+  let result = [arr];
   let itemToAdd = payload;
 
   if (removedIndex !== null) {
